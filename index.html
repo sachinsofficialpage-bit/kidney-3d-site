@@ -97,6 +97,11 @@ function showFunctions() {
   document.getElementById("modelSlide").classList.remove("active");
   document.getElementById("functionsSlide").classList.add("active");
 }
+function showInfo(title, text) {
+  document.getElementById("infoBox").style.display = "block";
+  document.getElementById("infoTitle").innerText = title;
+  document.getElementById("infoText").innerText = text;
+}
 
 function showModel() {
   document.getElementById("functionsSlide").classList.remove("active");
