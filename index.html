@@ -1,173 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Kidney Model</title>
-
-  <style>
-    body { margin: 0; overflow: hidden; font-family: Arial; background: #0f172a; color: white; }
-
-    header {
-      position: absolute;
-      top: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 24px;
-      z-index: 2;
+  <title>Kidney Health</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
-    button {
-      position: absolute;
-      top: 60px;
-      left: 20px;
-      padding: 10px;
-      background: #00ffcc;
-      border: none;
-      cursor: pointer;
-      z-index: 2;
+    body {
+      background: #f4f6f9;
+      color: #333;
     }
 
-    .label {
-      position: absolute;
-      color: #00ffcc;
-      background: rgba(0,0,0,0.6);
-      padding: 4px;
-      border-radius: 5px;
-      z-index: 2;
-    }
-
-    .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: none;
-    }
-
-    .active { display: block; }
-
-    #functionsSlide {
+    nav {
+      background: #2c3e50;
+      padding: 15px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      justify-content: space-between;
+      color: white;
     }
-  </style>
-</head>
 
-<body>
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
 
-<header>🧬 Kidney 3D Learning</header>
+    nav ul li {
+      margin-left: 20px;
+    }
 
-<button onclick="showFunctions()">View Functions</button>
+    .hero {
+      background: linear-gradient(to right, #3498db, #2ecc71);
+      color: white;
+      text-align: center;
+      padding: 80px 20px;
+    }
 
-<div id="modelSlide" class="slide active">
-  <div id="label1" class="label">Kidney</div>
-</div>
-  <div id="infoBox" style="
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  background:#111;
-  color:white;
-  padding:15px;
-  border-radius:10px;
-  display:none;
-  max-width:250px;
-">
-  <h3 id="infoTitle"></h3>
-  <p id="infoText"></p>
-</div>
+    .hero img {
+      width: 200px;
+      margin-top: 20px;
+    }
 
-<div id="functionsSlide" class="slide">
-  <h1>Kidney Functions</h1>
-  <p>✔ Filters blood</p>
-  <p>✔ Removes waste</p>
-  <p>✔ Controls water balance</p>
-  <p>✔ Produces urine</p>
-  <button onclick="showModel()">⬅ Back</button>
-</div>
-<div id="label1" class="label"
-onclick="showInfo('Kidney','The kidney filters blood, removes waste, and controls fluid balance.')">
-  Kidney
-</div>
-<div id="infoBox">...</div>
+    section {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
 
-<!-- Three.js -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.128/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
+    .card {
+      background: white;
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-<script>
-function showFunctions() {
-  document.getElementById("modelSlide").classList.remove("active");
-  document.getElementById("functionsSlide").classList.add("active");
-}
-function showInfo(title, text) {
-  document.getElementById("infoBox").style.display = "block";
-  document.getElementById("infoTitle").innerText = title;
-  document.getElementById("infoText").innerText = text;
-}
+    .card img {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
 
-function showModel() {
-  document.getElementById("functionsSlide").classList.remove("active");
-  document.getElementById("modelSlide").classList.add("active");
-}
+    h2 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
 
-// Scene
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0f172a);
-
-// Camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 5);
-
-// Renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById("modelSlide").appendChild(renderer.domElement);
-
-// Controls
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-// Lighting
-scene.add(new THREE.AmbientLight(0xffffff, 1));
-const light = new THREE.DirectionalLight(0xffffff, 2);
-light.position.set(5,5,5);
-scene.add(light);
-
-// Load Model (WORKING MODEL)
-const loader = new THREE.GLTFLoader();
-
-loader.load(
-  "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb",
-  function(gltf) {
-    const model = gltf.scene;
-
-    model.scale.set(2,2,2);
-
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    model.position.sub(center);
-
-    scene.add(model);
-  }
-);
-
-// Animation
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-animate();
-
-// Resize fix
-window.addEventListener("resize", () => {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-});
-</script>
-
-</body>
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #2c3e50;
+      color: white;
+      margin-top: 30px;
+    }
+  </style></head>
+<body><nav>
+  <h2>KidneyCare</h2>
+  <ul>
+    <li>Home</li>
+    <li>About</li>
+    <li>Health Tips</li>
+  </ul>
+</nav><div class="hero">
+  <h1>Kidney Health Awareness</h1>
+  <p>Learn how to keep your kidneys healthy</p>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Kidney_diagram.png">
+</div><section>  <div class="card">
+    <h2>What are Kidneys?</h2>
+    <p>Kidneys are organs that filter waste from blood and produce urine.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Kidney_diagram.png">
+  </div>  <div class="card">
+    <h2>Functions</h2>
+    <ul>
+      <li>Filter blood</li>
+      <li>Remove toxins</li>
+      <li>Control blood pressure</li>
+    </ul>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Kidney_structure.png">
+  </div>  <div class="card">
+    <h2>Kidney Problems</h2>
+    <ul>
+      <li>Kidney stones</li>
+      <li>CKD</li>
+      <li>Infections</li>
+    </ul>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Kidney_stone.jpg">
+  </div></section><footer>
+  <p>©️ 2026 KidneyCare</p>
+</footer></body>
 </html>
